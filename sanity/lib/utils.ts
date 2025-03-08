@@ -16,18 +16,14 @@ export const urlForImage = (source: Image | null | undefined) => {
   return imageBuilder?.image(source).auto('format').fit('max')
 }
 
-export function urlForOpenGraphImage(image: Image | null | undefined) {
-  return urlForImage(image)?.width(1200).height(627).fit('crop').url()
-}
-
 export function resolveHref(documentType?: string, slug?: string | null): string | undefined {
   switch (documentType) {
     case 'home':
       return '/'
     case 'page':
       return slug ? `/${slug}` : undefined
-    case 'project':
-      return slug ? `/projects/${slug}` : undefined
+    case 'talk':
+      return slug ? `/charlas/${slug}` : undefined
     default:
       console.warn('Invalid document type:', documentType)
       return undefined

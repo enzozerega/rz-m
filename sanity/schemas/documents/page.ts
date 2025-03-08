@@ -4,7 +4,7 @@ import {defineArrayMember, defineField, defineType} from 'sanity'
 export default defineType({
   type: 'document',
   name: 'page',
-  title: 'Page',
+  title: 'Pestaña',
   icon: DocumentIcon,
   fields: [
     defineField({
@@ -20,16 +20,14 @@ export default defineType({
       options: {
         source: 'title',
       },
-      validation: (rule) => rule.required(),
+      hidden: true,
     }),
     defineField({
-      name: 'overview',
-      description:
-        'Used both for the <meta> description tag for SEO, and the personal website subheader.',
-      title: 'Overview',
+      name: 'description',
+      description: 'Used as a subtext in the page.',
+      title: 'Description',
       type: 'array',
       of: [
-        // Paragraphs
         defineArrayMember({
           lists: [],
           marks: {
@@ -53,12 +51,10 @@ export default defineType({
     }),
     defineField({
       type: 'array',
-      name: 'body',
-      title: 'Body',
-      description:
-        "This is where you can write the page's content. Including custom blocks like timelines for more a more visual display of information.",
+      name: 'content',
+      title: 'Content',
+      description: "This is where you can write the page's content.",
       of: [
-        // Paragraphs
         defineArrayMember({
           type: 'block',
           marks: {
@@ -76,14 +72,20 @@ export default defineType({
                 ],
               },
             ],
+            decorators: [
+              {
+                title: 'Strong',
+                value: 'strong',
+              },
+              {
+                title: 'Emphasis',
+                value: 'em',
+              },
+            ],
           },
           styles: [],
         }),
         // Custom blocks
-        defineArrayMember({
-          name: 'timeline',
-          type: 'timeline',
-        }),
         defineField({
           type: 'image',
           icon: ImageIcon,

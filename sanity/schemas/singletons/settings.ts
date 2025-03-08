@@ -1,18 +1,16 @@
 import {CogIcon} from '@sanity/icons'
-import {defineArrayMember, defineField, defineType} from 'sanity'
+import {defineField, defineType} from 'sanity'
 
 export default defineType({
   name: 'settings',
-  title: 'Settings',
+  title: 'Menú',
   type: 'document',
   icon: CogIcon,
-  // Uncomment below to have edits publish automatically as you type
-  // liveEdit: true,
   fields: [
     defineField({
       name: 'menuItems',
       title: 'Menu Item list',
-      description: 'Links displayed on the header of your site.',
+      description: 'Links displayed in the menu bar.',
       type: 'array',
       of: [
         {
@@ -25,55 +23,22 @@ export default defineType({
             {
               type: 'page',
             },
-            {
-              type: 'project',
-            },
           ],
         },
       ],
     }),
     defineField({
-      name: 'footer',
-      description: 'This is a block of text that will be displayed at the bottom of the page.',
-      title: 'Footer Info',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          type: 'block',
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
-            ],
-          },
-        }),
-      ],
-    }),
-    defineField({
-      name: 'ogImage',
-      title: 'Open Graph Image',
+      name: 'logo',
+      title: 'Logo',
       type: 'image',
-      description: 'Displayed on social cards and search engine results.',
-      options: {
-        hotspot: true,
-      },
+      description: 'The logo that will appear on the header of your site.',
+      validation: (rule) => rule.required(),
     }),
   ],
   preview: {
     prepare() {
       return {
-        title: 'Settings',
-        subtitle: 'Menu Items, Footer Info, and Open Graph Image',
+        title: 'Menú',
       }
     },
   },

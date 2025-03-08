@@ -8,8 +8,8 @@ import {defineDocuments, defineLocations} from 'sanity/presentation'
 
 export const mainDocuments = defineDocuments([
   {
-    route: '/projects/:slug',
-    filter: `_type == "project" && slug.current == $slug`,
+    route: '/charlas/:slug',
+    filter: `_type == "talk" && slug.current == $slug`,
   },
   {
     route: '/:slug',
@@ -27,17 +27,6 @@ export const locations = {
     tone: 'positive',
     locations: [{title: 'Home', href: resolveHref('home')!}],
   }),
-  project: defineLocations({
-    select: {title: 'title', slug: 'slug.current'},
-    resolve: (doc) => ({
-      locations: [
-        {
-          title: doc?.title || 'Untitled',
-          href: resolveHref('project', doc?.slug)!,
-        },
-      ],
-    }),
-  }),
   page: defineLocations({
     select: {title: 'title', slug: 'slug.current'},
     resolve: (doc) => ({
@@ -45,6 +34,17 @@ export const locations = {
         {
           title: doc?.title || 'Untitled',
           href: resolveHref('page', doc?.slug)!,
+        },
+      ],
+    }),
+  }),
+  talk: defineLocations({
+    select: {title: 'title', slug: 'slug.current'},
+    resolve: (doc) => ({
+      locations: [
+        {
+          title: doc?.title || 'Untitled',
+          href: resolveHref('talk', doc?.slug)!,
         },
       ],
     }),

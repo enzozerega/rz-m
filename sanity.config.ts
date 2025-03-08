@@ -6,18 +6,19 @@
 import {apiVersion, dataset, projectId, studioUrl} from '@/sanity/lib/api'
 import * as resolve from '@/sanity/plugins/resolve'
 import {pageStructure, singletonPlugin} from '@/sanity/plugins/settings'
+import {slugOnSave} from '@/sanity/plugins/slugOnSave'
 import page from '@/sanity/schemas/documents/page'
-import project from '@/sanity/schemas/documents/project'
-import duration from '@/sanity/schemas/objects/duration'
-import milestone from '@/sanity/schemas/objects/milestone'
-import timeline from '@/sanity/schemas/objects/timeline'
+import talk from '@/sanity/schemas/documents/talk'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
+import team from '@/sanity/schemas/singletons/team'
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
 import {presentationTool} from 'sanity/presentation'
 import {structureTool} from 'sanity/structure'
+import member from './sanity/schemas/documents/member'
+import review from './sanity/schemas/documents/review'
 
 const title =
   process.env.NEXT_PUBLIC_SANITY_PROJECT_TITLE || 'Next.js Personal Website with Sanity.io'
@@ -33,18 +34,24 @@ export default defineConfig({
       // Singletons
       home,
       settings,
+      team,
       // Documents
-      duration,
       page,
-      project,
+      talk,
+      member,
+      review,
       // Objects
-      milestone,
-      timeline,
     ],
+  },
+  document: {
+    actions: (prev) =>
+      prev.map((originalAction) =>
+        originalAction.action === 'publish' ? slugOnSave(originalAction) : originalAction,
+      ),
   },
   plugins: [
     structureTool({
-      structure: pageStructure([home, settings]),
+      structure: pageStructure([home, settings, team]),
     }),
     presentationTool({
       resolve,

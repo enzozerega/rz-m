@@ -4,20 +4,25 @@ export const homePageQuery = defineQuery(`
   *[_type == "home"][0]{
     _id,
     _type,
-    overview,
-    showcaseProjects[]{
-      _key,
-      ...@->{
-        _id,
-        _type,
-        coverImage,
-        overview,
-        "slug": slug.current,
-        tags,
-        title,
-      }
-    },
+    slogan,
     title,
+    poll,
+    "imageUrl": image.asset->url,
+    "talks":*[_type == "talk"]{
+      _id,
+      _type,
+      slug,
+      title,
+      description,
+      "talkUrl": talk.asset->url
+    },
+    "reviews":*[_type == "review"]{
+      _id,
+      _type,
+      name,
+      role,
+      content
+    }
   }
 `)
 
@@ -25,26 +30,21 @@ export const pagesBySlugQuery = defineQuery(`
   *[_type == "page" && slug.current == $slug][0] {
     _id,
     _type,
-    body,
-    overview,
+    content,
+    description,
     title,
     "slug": slug.current,
   }
 `)
 
-export const projectBySlugQuery = defineQuery(`
-  *[_type == "project" && slug.current == $slug][0] {
+export const talkBySlugQuery = defineQuery(`
+  *[_type == "talk" && slug.current == $slug][0] {
     _id,
     _type,
-    client,
-    coverImage,
     description,
-    duration,
-    overview,
-    site,
     "slug": slug.current,
-    tags,
     title,
+    "talkUrl": talk.asset->url
   }
 `)
 
@@ -52,7 +52,6 @@ export const settingsQuery = defineQuery(`
   *[_type == "settings"][0]{
     _id,
     _type,
-    footer,
     menuItems[]{
       _key,
       ...@->{
@@ -61,7 +60,38 @@ export const settingsQuery = defineQuery(`
         title
       }
     },
-    ogImage,
+    "logoUrl": logo.asset->url,
+    "team":*[_type == "team"][0]{
+      _id,
+      _type,
+      description,
+      teamMembers[]{
+        _key,
+        ...@->{
+          _id,
+          name,
+          role,
+          "slug": slug.current,
+        }
+      }
+    }
+  }
+`)
+
+export const teamQuery = defineQuery(`
+  *[_type == "team"][0]{
+    _id,
+    _type,
+    description,
+    teamMembers[]{
+      _key,
+      ...@->{
+        _id,
+        name,
+        role,
+        "slug": slug.current,
+      }
+    }
   }
 `)
 

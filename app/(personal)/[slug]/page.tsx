@@ -23,7 +23,7 @@ export async function generateMetadata(
 
   return {
     title: page?.title,
-    description: page?.overview ? toPlainText(page.overview) : (await parent).description,
+    description: page?.description ? toPlainText(page.description) : (await parent).description,
   }
 }
 
@@ -45,28 +45,25 @@ export default async function PageSlugRoute({params}: Props) {
     notFound()
   }
 
-  const {body, overview, title} = data ?? {}
+  const {content, description, title} = data ?? {}
 
   return (
     <div>
       <div className="mb-14">
-        {/* Header */}
         <Header
           id={data?._id || null}
           type={data?._type || null}
-          path={['overview']}
+          path={['description']}
           title={title || (data?._id ? 'Untitled' : '404 Page Not Found')}
-          description={overview}
+          description={description}
         />
-
-        {/* Body */}
-        {body && (
+        {content && (
           <CustomPortableText
             id={data?._id || null}
             type={data?._type || null}
             path={['body']}
             paragraphClasses="font-serif max-w-3xl text-gray-600 text-xl"
-            value={body as unknown as PortableTextBlock[]}
+            value={content as unknown as PortableTextBlock[]}
           />
         )}
       </div>
