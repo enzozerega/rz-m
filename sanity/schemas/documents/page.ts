@@ -14,6 +14,12 @@ export default defineType({
       validation: (rule) => rule.required(),
     }),
     defineField({
+      name: 'overview',
+      title: 'Short Description',
+      type: 'string',
+      validation: (rule) => rule.max(350),
+    }),
+    defineField({
       type: 'slug',
       name: 'slug',
       title: 'Slug',
@@ -23,37 +29,9 @@ export default defineType({
       hidden: true,
     }),
     defineField({
+      type: 'array',
       name: 'description',
-      description: 'Used as a subtext in the page.',
       title: 'Description',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          lists: [],
-          marks: {
-            annotations: [],
-            decorators: [
-              {
-                title: 'Italic',
-                value: 'em',
-              },
-              {
-                title: 'Strong',
-                value: 'strong',
-              },
-            ],
-          },
-          styles: [],
-          type: 'block',
-        }),
-      ],
-      validation: (rule) => rule.max(155).required(),
-    }),
-    defineField({
-      type: 'array',
-      name: 'content',
-      title: 'Content',
-      description: "This is where you can write the page's content.",
       of: [
         defineArrayMember({
           type: 'block',
@@ -106,12 +84,6 @@ export default defineType({
               name: 'caption',
               type: 'string',
             }),
-            defineField({
-              name: 'alt',
-              type: 'string',
-              title: 'Alt text',
-              description: 'Alternative text for screenreaders. Falls back on caption if not set',
-            }),
           ],
         }),
       ],
@@ -123,7 +95,7 @@ export default defineType({
     },
     prepare({title}) {
       return {
-        subtitle: 'Page',
+        subtitle: 'Pestaña',
         title,
       }
     },

@@ -21,11 +21,12 @@ export default defineType({
       description: 'Member role. This field is optional.',
     }),
     defineField({
-      type: 'slug',
       name: 'slug',
       title: 'Slug',
+      type: 'slug',
       options: {
-        source: 'title',
+        source: 'name',
+        maxLength: 96,
       },
       hidden: true,
     }),

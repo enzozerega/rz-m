@@ -101,6 +101,7 @@ export type Talk = {
     _type: 'file'
   }
   slug?: Slug
+  overview?: string
   description?: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -110,7 +111,11 @@ export type Talk = {
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: null
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
     level?: number
     _type: 'block'
     _key: string
@@ -146,22 +151,9 @@ export type Page = {
   _updatedAt: string
   _rev: string
   title?: string
+  overview?: string
   slug?: Slug
-  description?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: null
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
-  content?: Array<
+  description?: Array<
     | {
         children?: Array<{
           marks?: Array<string>
@@ -190,7 +182,6 @@ export type Page = {
         hotspot?: SanityImageHotspot
         crop?: SanityImageCrop
         caption?: string
-        alt?: string
         _type: 'image'
         _key: string
       }
@@ -287,24 +278,40 @@ export type Home = {
     crop?: SanityImageCrop
     _type: 'image'
   }
-  poll?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  displaypoll?: boolean
+  poll?: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        caption?: string
+        _type: 'image'
+        _key: string
+      }
+  >
 }
 
 export type SanityImageCrop = {
@@ -386,7 +393,7 @@ export type AllSanitySchemaTypes =
 export declare const internalGroqTypeReferenceTo: unique symbol
 // Source: ./sanity/lib/queries.ts
 // Variable: homePageQuery
-// Query: *[_type == "home"][0]{    _id,    _type,    slogan,    title,    poll,    "imageUrl": image.asset->url,    "talks":*[_type == "talk"]{      _id,      _type,      slug,      title,      description,      "talkUrl": talk.asset->url    },    "reviews":*[_type == "review"]{      _id,      _type,      name,      role,      content    }  }
+// Query: *[_type == "home"][0]{    _id,    _type,    slogan,    title,    poll,    displaypoll,    "imageUrl": image.asset->url,    "talks":*[_type == "talk"]{      _id,      _type,      slug,      title,      overview,      "talkUrl": talk.asset->url    },    "reviews":*[_type == "review"]{      _id,      _type,      name,      role,      content    }  }
 export type HomePageQueryResult = {
   _id: string
   _type: 'home'
@@ -409,73 +416,7 @@ export type HomePageQueryResult = {
     _key: string
   }> | null
   title: string | null
-  poll: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
-  imageUrl: string | null
-  talks: Array<{
-    _id: string
-    _type: 'talk'
-    slug: Slug | null
-    title: string | null
-    description: Array<{
-      children?: Array<{
-        marks?: Array<string>
-        text?: string
-        _type: 'span'
-        _key: string
-      }>
-      style?: 'normal'
-      listItem?: never
-      markDefs?: null
-      level?: number
-      _type: 'block'
-      _key: string
-    }> | null
-    talkUrl: string | null
-  }>
-  reviews: Array<{
-    _id: string
-    _type: 'review'
-    name: string | null
-    role: string | null
-    content: Array<{
-      children?: Array<{
-        marks?: Array<string>
-        text?: string
-        _type: 'span'
-        _key: string
-      }>
-      style?: 'normal'
-      listItem?: 'bullet' | 'number'
-      markDefs?: null
-      level?: number
-      _type: 'block'
-      _key: string
-    }> | null
-  }>
-} | null
-// Variable: pagesBySlugQuery
-// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    content,    description,    title,    "slug": slug.current,  }
-export type PagesBySlugQueryResult = {
-  _id: string
-  _type: 'page'
-  content: Array<
+  poll: Array<
     | {
         children?: Array<{
           marks?: Array<string>
@@ -504,33 +445,89 @@ export type PagesBySlugQueryResult = {
         hotspot?: SanityImageHotspot
         crop?: SanityImageCrop
         caption?: string
-        alt?: string
         _type: 'image'
         _key: string
       }
   > | null
-  description: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
+  displaypoll: boolean | null
+  imageUrl: string | null
+  talks: Array<{
+    _id: string
+    _type: 'talk'
+    slug: Slug | null
+    title: string | null
+    overview: string | null
+    talkUrl: string | null
+  }>
+  reviews: Array<{
+    _id: string
+    _type: 'review'
+    name: string | null
+    role: string | null
+    content: Array<{
+      children?: Array<{
+        marks?: Array<string>
+        text?: string
+        _type: 'span'
+        _key: string
+      }>
+      style?: 'normal'
+      listItem?: 'bullet' | 'number'
+      markDefs?: null
+      level?: number
+      _type: 'block'
       _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: null
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
+    }> | null
+  }>
+} | null
+// Variable: pagesBySlugQuery
+// Query: *[_type == "page" && slug.current == $slug][0] {    _id,    _type,    description,    overview,    title,    "slug": slug.current,  }
+export type PagesBySlugQueryResult = {
+  _id: string
+  _type: 'page'
+  description: Array<
+    | {
+        children?: Array<{
+          marks?: Array<string>
+          text?: string
+          _type: 'span'
+          _key: string
+        }>
+        style?: 'normal'
+        listItem?: 'bullet' | 'number'
+        markDefs?: Array<{
+          href?: string
+          _type: 'link'
+          _key: string
+        }>
+        level?: number
+        _type: 'block'
+        _key: string
+      }
+    | {
+        asset?: {
+          _ref: string
+          _type: 'reference'
+          _weak?: boolean
+          [internalGroqTypeReferenceTo]?: 'sanity.imageAsset'
+        }
+        hotspot?: SanityImageHotspot
+        crop?: SanityImageCrop
+        caption?: string
+        _type: 'image'
+        _key: string
+      }
+  > | null
+  overview: string | null
   title: string | null
   slug: string | null
 } | null
 // Variable: talkBySlugQuery
-// Query: *[_type == "talk" && slug.current == $slug][0] {    _id,    _type,    description,    "slug": slug.current,    title,    "talkUrl": talk.asset->url  }
+// Query: *[_type == "talk" && slug.current == $slug][0] {    _id,    _type,    overview,    description,    "slug": slug.current,    title,    "talkUrl": talk.asset->url  }
 export type TalkBySlugQueryResult = {
   _id: string
   _type: 'talk'
+  overview: string | null
   description: Array<{
     children?: Array<{
       marks?: Array<string>
@@ -540,7 +537,11 @@ export type TalkBySlugQueryResult = {
     }>
     style?: 'normal'
     listItem?: never
-    markDefs?: null
+    markDefs?: Array<{
+      href?: string
+      _type: 'link'
+      _key: string
+    }>
     level?: number
     _type: 'block'
     _key: string
@@ -550,7 +551,7 @@ export type TalkBySlugQueryResult = {
   talkUrl: string | null
 } | null
 // Variable: settingsQuery
-// Query: *[_type == "settings"][0]{    _id,    _type,    menuItems[]{      _key,      ...@->{        _type,        "slug": slug.current,        title      }    },    "logoUrl": logo.asset->url,    "team":*[_type == "team"][0]{      _id,      _type,      description,      teamMembers[]{        _key,        ...@->{          _id,          name,          role,          "slug": slug.current,        }      }    }  }
+// Query: *[_type == "settings"][0]{    _id,    _type,    menuItems[]{      _key,      ...@->{        _type,        "slug": slug.current,        title      }    },    "logoUrl": logo.asset->url,    "team":*[_type == "member"]{      name,      role    },  }
 export type SettingsQueryResult = {
   _id: string
   _type: 'settings'
@@ -569,32 +570,16 @@ export type SettingsQueryResult = {
       }
   > | null
   logoUrl: string | null
-  team: {
-    _id: string
-    _type: 'team'
-    description: null
-    teamMembers: Array<{
-      _key: string
-      _id: string
-      name: string | null
-      role: string | null
-      slug: string | null
-    }> | null
-  } | null
-} | null
-// Variable: teamQuery
-// Query: *[_type == "team"][0]{    _id,    _type,    description,    teamMembers[]{      _key,      ...@->{        _id,        name,        role,        "slug": slug.current,      }    }  }
-export type TeamQueryResult = {
-  _id: string
-  _type: 'team'
-  description: null
-  teamMembers: Array<{
-    _key: string
-    _id: string
+  team: Array<{
     name: string | null
     role: string | null
-    slug: string | null
-  }> | null
+  }>
+} | null
+// Variable: memberBySlugQuery
+// Query: *[_type == "member" && slug.current == $slug][0] {   name,   role  }
+export type MemberBySlugQueryResult = {
+  name: string | null
+  role: string | null
 } | null
 // Variable: slugsByTypeQuery
 // Query: *[_type == $type && defined(slug.current)]{"slug": slug.current}
@@ -604,11 +589,11 @@ export type SlugsByTypeQueryResult = Array<{
 
 declare module '@sanity/client' {
   interface SanityQueries {
-    '\n  *[_type == "home"][0]{\n    _id,\n    _type,\n    slogan,\n    title,\n    poll,\n    "imageUrl": image.asset->url,\n    "talks":*[_type == "talk"]{\n      _id,\n      _type,\n      slug,\n      title,\n      description,\n      "talkUrl": talk.asset->url\n    },\n    "reviews":*[_type == "review"]{\n      _id,\n      _type,\n      name,\n      role,\n      content\n    }\n  }\n': HomePageQueryResult
-    '\n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    _type,\n    content,\n    description,\n    title,\n    "slug": slug.current,\n  }\n': PagesBySlugQueryResult
-    '\n  *[_type == "talk" && slug.current == $slug][0] {\n    _id,\n    _type,\n    description,\n    "slug": slug.current,\n    title,\n    "talkUrl": talk.asset->url\n  }\n': TalkBySlugQueryResult
-    '\n  *[_type == "settings"][0]{\n    _id,\n    _type,\n    menuItems[]{\n      _key,\n      ...@->{\n        _type,\n        "slug": slug.current,\n        title\n      }\n    },\n    "logoUrl": logo.asset->url,\n    "team":*[_type == "team"][0]{\n      _id,\n      _type,\n      description,\n      teamMembers[]{\n        _key,\n        ...@->{\n          _id,\n          name,\n          role,\n          "slug": slug.current,\n        }\n      }\n    }\n  }\n': SettingsQueryResult
-    '\n  *[_type == "team"][0]{\n    _id,\n    _type,\n    description,\n    teamMembers[]{\n      _key,\n      ...@->{\n        _id,\n        name,\n        role,\n        "slug": slug.current,\n      }\n    }\n  }\n': TeamQueryResult
+    '\n  *[_type == "home"][0]{\n    _id,\n    _type,\n    slogan,\n    title,\n    poll,\n    displaypoll,\n    "imageUrl": image.asset->url,\n    "talks":*[_type == "talk"]{\n      _id,\n      _type,\n      slug,\n      title,\n      overview,\n      "talkUrl": talk.asset->url\n    },\n    "reviews":*[_type == "review"]{\n      _id,\n      _type,\n      name,\n      role,\n      content\n    }\n  }\n': HomePageQueryResult
+    '\n  *[_type == "page" && slug.current == $slug][0] {\n    _id,\n    _type,\n    description,\n    overview,\n    title,\n    "slug": slug.current,\n  }\n': PagesBySlugQueryResult
+    '\n  *[_type == "talk" && slug.current == $slug][0] {\n    _id,\n    _type,\n    overview,\n    description,\n    "slug": slug.current,\n    title,\n    "talkUrl": talk.asset->url\n  }\n': TalkBySlugQueryResult
+    '\n  *[_type == "settings"][0]{\n    _id,\n    _type,\n    menuItems[]{\n      _key,\n      ...@->{\n        _type,\n        "slug": slug.current,\n        title\n      }\n    },\n    "logoUrl": logo.asset->url,\n    "team":*[_type == "member"]{\n      name,\n      role\n    },\n  }\n': SettingsQueryResult
+    '\n  *[_type == "member" && slug.current == $slug][0] {\n   name,\n   role\n  }\n': MemberBySlugQueryResult
     '\n  *[_type == $type && defined(slug.current)]{"slug": slug.current}\n': SlugsByTypeQueryResult
   }
 }

@@ -1,40 +1,11 @@
-import {CustomPortableText} from '@/components/CustomPortableText'
-import {Header} from '@/components/Header'
+import Page from '@/components/Page'
 import {sanityFetch} from '@/sanity/lib/live'
-import {pagesBySlugQuery, slugsByTypeQuery} from '@/sanity/lib/queries'
-import type {Metadata, ResolvingMetadata} from 'next'
-import {toPlainText, type PortableTextBlock} from 'next-sanity'
+import {pagesBySlugQuery} from '@/sanity/lib/queries'
 import {draftMode} from 'next/headers'
 import {notFound} from 'next/navigation'
 
 type Props = {
   params: Promise<{slug: string}>
-}
-
-export async function generateMetadata(
-  {params}: Props,
-  parent: ResolvingMetadata,
-): Promise<Metadata> {
-  const {data: page} = await sanityFetch({
-    query: pagesBySlugQuery,
-    params,
-    stega: false,
-  })
-
-  return {
-    title: page?.title,
-    description: page?.description ? toPlainText(page.description) : (await parent).description,
-  }
-}
-
-export async function generateStaticParams() {
-  const {data} = await sanityFetch({
-    query: slugsByTypeQuery,
-    params: {type: 'page'},
-    stega: false,
-    perspective: 'published',
-  })
-  return data
 }
 
 export default async function PageSlugRoute({params}: Props) {
@@ -45,29 +16,7 @@ export default async function PageSlugRoute({params}: Props) {
     notFound()
   }
 
-  const {content, description, title} = data ?? {}
+  const {description, title, overview} = data ?? {}
 
-  return (
-    <div>
-      <div className="mb-14">
-        <Header
-          id={data?._id || null}
-          type={data?._type || null}
-          path={['description']}
-          title={title || (data?._id ? 'Untitled' : '404 Page Not Found')}
-          description={description}
-        />
-        {content && (
-          <CustomPortableText
-            id={data?._id || null}
-            type={data?._type || null}
-            path={['body']}
-            paragraphClasses="font-serif max-w-3xl text-gray-600 text-xl"
-            value={content as unknown as PortableTextBlock[]}
-          />
-        )}
-      </div>
-      <div className="absolute left-0 w-screen border-t" />
-    </div>
-  )
+  return <Page title={title} overview={overview} description={description} />
 }

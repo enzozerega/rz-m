@@ -7,13 +7,14 @@ export const homePageQuery = defineQuery(`
     slogan,
     title,
     poll,
+    displaypoll,
     "imageUrl": image.asset->url,
     "talks":*[_type == "talk"]{
       _id,
       _type,
       slug,
       title,
-      description,
+      overview,
       "talkUrl": talk.asset->url
     },
     "reviews":*[_type == "review"]{
@@ -30,8 +31,8 @@ export const pagesBySlugQuery = defineQuery(`
   *[_type == "page" && slug.current == $slug][0] {
     _id,
     _type,
-    content,
     description,
+    overview,
     title,
     "slug": slug.current,
   }
@@ -41,6 +42,7 @@ export const talkBySlugQuery = defineQuery(`
   *[_type == "talk" && slug.current == $slug][0] {
     _id,
     _type,
+    overview,
     description,
     "slug": slug.current,
     title,
@@ -61,37 +63,17 @@ export const settingsQuery = defineQuery(`
       }
     },
     "logoUrl": logo.asset->url,
-    "team":*[_type == "team"][0]{
-      _id,
-      _type,
-      description,
-      teamMembers[]{
-        _key,
-        ...@->{
-          _id,
-          name,
-          role,
-          "slug": slug.current,
-        }
-      }
-    }
+    "team":*[_type == "member"]{
+      name,
+      role
+    },
   }
 `)
 
-export const teamQuery = defineQuery(`
-  *[_type == "team"][0]{
-    _id,
-    _type,
-    description,
-    teamMembers[]{
-      _key,
-      ...@->{
-        _id,
-        name,
-        role,
-        "slug": slug.current,
-      }
-    }
+export const memberBySlugQuery = defineQuery(`
+  *[_type == "member" && slug.current == $slug][0] {
+   name,
+   role
   }
 `)
 

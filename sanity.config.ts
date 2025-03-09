@@ -11,7 +11,6 @@ import page from '@/sanity/schemas/documents/page'
 import talk from '@/sanity/schemas/documents/talk'
 import home from '@/sanity/schemas/singletons/home'
 import settings from '@/sanity/schemas/singletons/settings'
-import team from '@/sanity/schemas/singletons/team'
 import {visionTool} from '@sanity/vision'
 import {defineConfig} from 'sanity'
 import {unsplashImageAsset} from 'sanity-plugin-asset-source-unsplash'
@@ -34,7 +33,6 @@ export default defineConfig({
       // Singletons
       home,
       settings,
-      team,
       // Documents
       page,
       talk,
@@ -51,7 +49,7 @@ export default defineConfig({
   },
   plugins: [
     structureTool({
-      structure: pageStructure([home, settings, team]),
+      structure: pageStructure([home, settings]),
     }),
     presentationTool({
       resolve,

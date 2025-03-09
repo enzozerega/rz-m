@@ -1,21 +1,18 @@
 import ImageBox from '@/components/ImageBox'
-import type {PathSegment, StudioPathLike} from '@sanity/client/csm'
 import {PortableText, type PortableTextBlock, type PortableTextComponents} from 'next-sanity'
 import type {Image} from 'sanity'
 
 export function CustomPortableText({
-  id,
-  type,
-  path,
   paragraphClasses,
   value,
 }: {
-  id: string | null
-  type: string | null
-  path: PathSegment[]
   paragraphClasses?: string
-  value: PortableTextBlock[]
+  value?: null | PortableTextBlock[]
 }) {
+  if (!value) {
+    return null
+  }
+
   const components: PortableTextComponents = {
     block: {
       normal: ({children}) => {

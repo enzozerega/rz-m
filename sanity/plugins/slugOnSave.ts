@@ -14,16 +14,15 @@ export function slugOnSave(originalPublishAction) {
       onHandle: async () => {
         if (
           !props.draft ||
-          props.type !== 'talk' ||
-          props.type !== 'member' ||
-          props.type !== 'page'
+          (props.type !== 'talk' && props.type !== 'member' && props.type !== 'page')
         ) {
           return originalResult.onHandle()
         }
         // check for a title and existing slug
-        if (props.draft.title && !props.published?.slug?.current) {
+        const input = props.draft.title || props.draft.name
+        if (input && !props.published?.slug?.current) {
           // use the generator package used in sanity core with default values
-          const generatedSlug = props.draft.title ? defaultSlugify(props.draft.title) : null
+          const generatedSlug = defaultSlugify(input)
           // double check we've got a slug and patch it in
           if (generatedSlug) {
             patchSlug(generatedSlug)
@@ -38,6 +37,6 @@ export function slugOnSave(originalPublishAction) {
 }
 
 const defaultSlugify = (value) => {
-  const slugifyOpts = {truncate: 200, symbols: true}
+  const slugifyOpts = {truncate: 200, symbols: false}
   return value ? speakingurl(value, slugifyOpts) : ''
 }

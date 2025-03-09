@@ -1,4 +1,3 @@
-import {Header} from '@/components/Header'
 import type {HomePageQueryResult} from '@/sanity.types'
 import {PortableTextBlock} from 'next-sanity'
 import Link from 'next/link'
@@ -10,24 +9,25 @@ export interface HomePageProps {
 }
 
 export async function HomePage({data}: HomePageProps) {
-  const {slogan = [], title = '', talks = [], imageUrl, reviews, poll} = data ?? {}
-  console.log({data})
+  const {slogan = '', title = '', talks = [], imageUrl, reviews, poll, displaypoll} = data ?? {}
 
   return (
     <div>
-      {title && (
-        <Header
-          id={data?._id || null}
-          type={data?._type || null}
-          path={['slogan']}
-          centered
-          title={title}
-          description={slogan}
-          imageUrl={imageUrl}
-        />
-      )}
+      <div className={'text-center mb-10'}>
+        <div className="text-3xl font-extrabold tracking-tight md:text-5xl">{title}</div>
+        <div className="mb-20 space-y-6">
+          <div className="mt-4 italic text-pretty font-serif text-xl text-gray-600 md:text-2xl">
+            {slogan}
+          </div>
+          {imageUrl && (
+            <div className="mt-4">
+              <img src={imageUrl} className="w-full rounded-md" />
+            </div>
+          )}
+        </div>
+      </div>
 
-      <H1>Charlas</H1>
+      {talks?.length && <H1>Charlas</H1>}
       {talks.map((talk, idx) => (
         <div className="x-auto max-w-[100rem] border rounded-md mb-4" key={`charla-${idx}`}>
           <Link
@@ -47,45 +47,26 @@ export async function HomePage({data}: HomePageProps) {
                   <div className="mb-2 text-xl font-extrabold tracking-tight md:text-2xl">
                     {talk.title}
                   </div>
-                  <div className="font-serif text-gray-500">
-                    <CustomPortableText
-                      id={talk._id}
-                      type={talk._type}
-                      path={['description']}
-                      value={talk.description as PortableTextBlock[]}
-                    />
-                  </div>
+                  <div className="font-serif text-gray-500">{talk.overview}</div>
                 </div>
               </div>
             </div>
           </Link>
         </div>
       ))}
-      <H1>Reseñas</H1>
+      {reviews?.length && <H1>Reseñas</H1>}
       {reviews?.map((review, idx) => (
         <div key={`review-${idx}`} className="border rounded-md p-4 mt-4">
-          <div className="text-xl font-extrabold tracking-tight md:text-xl">
-            {review.name} <span className="font-thin md:text-lg">{review.role}</span>{' '}
+          <div className="font-extrabold tracking-tight">
+            {review.name} <span className="font-thin pl-2">{review.role}</span>{' '}
           </div>
-          <CustomPortableText
-            id={review._id}
-            type={review._type}
-            path={['content']}
-            value={review.content as PortableTextBlock[]}
-          />
+          <CustomPortableText value={review.content as PortableTextBlock[]} />
         </div>
       ))}
-      {poll && (
+      {displaypoll && (
         <div>
           <H1>¿Cómo está tu organización?</H1>
-          <div>
-            <CustomPortableText
-              id={poll._id}
-              type={poll._type}
-              path={['poll']}
-              value={poll as PortableTextBlock[]}
-            />
-          </div>
+          <CustomPortableText value={poll as PortableTextBlock[]} />
         </div>
       )}
     </div>

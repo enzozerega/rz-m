@@ -1,4 +1,4 @@
-import {HomeIcon} from '@sanity/icons'
+import {HomeIcon, ImageIcon} from '@sanity/icons'
 import {defineArrayMember, defineField, defineType} from 'sanity'
 
 export default defineType({
@@ -15,42 +15,8 @@ export default defineType({
     }),
     defineField({
       name: 'slogan',
-      description: 'The slogan is displayed as a subtext on the homepage.',
       title: 'Slogan',
-      type: 'array',
-      of: [
-        defineArrayMember({
-          lists: [],
-          marks: {
-            annotations: [
-              {
-                name: 'link',
-                type: 'object',
-                title: 'Link',
-                fields: [
-                  {
-                    name: 'href',
-                    type: 'url',
-                    title: 'Url',
-                  },
-                ],
-              },
-            ],
-            decorators: [
-              {
-                title: 'Italic',
-                value: 'em',
-              },
-              {
-                title: 'Strong',
-                value: 'strong',
-              },
-            ],
-          },
-          styles: [],
-          type: 'block',
-        }),
-      ],
+      type: 'string',
       validation: (rule) => rule.max(155).required(),
     }),
     defineField({
@@ -59,12 +25,17 @@ export default defineType({
       type: 'image',
     }),
     defineField({
+      name: 'displaypoll',
+      title: 'Display Poll Section',
+      type: 'boolean',
+    }),
+    defineField({
       name: 'poll',
       title: 'Poll',
       type: 'array',
       of: [
         defineArrayMember({
-          lists: [],
+          type: 'block',
           marks: {
             annotations: [
               {
@@ -82,17 +53,39 @@ export default defineType({
             ],
             decorators: [
               {
-                title: 'Italic',
-                value: 'em',
-              },
-              {
                 title: 'Strong',
                 value: 'strong',
+              },
+              {
+                title: 'Emphasis',
+                value: 'em',
               },
             ],
           },
           styles: [],
-          type: 'block',
+        }),
+        // Custom blocks
+        defineField({
+          type: 'image',
+          icon: ImageIcon,
+          name: 'image',
+          title: 'Image',
+          options: {
+            hotspot: true,
+          },
+          preview: {
+            select: {
+              media: 'asset',
+              title: 'caption',
+            },
+          },
+          fields: [
+            defineField({
+              title: 'Caption',
+              name: 'caption',
+              type: 'string',
+            }),
+          ],
         }),
       ],
     }),

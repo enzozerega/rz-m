@@ -9,8 +9,6 @@ export default defineType({
   fields: [
     defineField({
       name: 'title',
-      description:
-        'This field will be displayed as the title of the talk. It also appears in the URL.',
       title: 'Title',
       type: 'string',
       validation: (rule) => rule.required(),
@@ -32,15 +30,33 @@ export default defineType({
       hidden: true,
     }),
     defineField({
+      name: 'overview',
+      title: 'Short Description',
+      type: 'string',
+      validation: (rule) => rule.max(350),
+    }),
+    defineField({
       name: 'description',
-      description: 'Add a description of the talk. This field is optional.',
       title: 'Description',
       type: 'array',
       of: [
         defineArrayMember({
           lists: [],
           marks: {
-            annotations: [],
+            annotations: [
+              {
+                name: 'link',
+                type: 'object',
+                title: 'Link',
+                fields: [
+                  {
+                    name: 'href',
+                    type: 'url',
+                    title: 'Url',
+                  },
+                ],
+              },
+            ],
             decorators: [
               {
                 title: 'Italic',
@@ -49,10 +65,6 @@ export default defineType({
               {
                 title: 'Strong',
                 value: 'strong',
-              },
-              {
-                title: 'Link',
-                value: 'link',
               },
             ],
           },
