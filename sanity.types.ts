@@ -194,21 +194,6 @@ export type Slug = {
   source?: string
 }
 
-export type Team = {
-  _id: string
-  _type: 'team'
-  _createdAt: string
-  _updatedAt: string
-  _rev: string
-  teamMembers?: Array<{
-    _ref: string
-    _type: 'reference'
-    _weak?: boolean
-    _key: string
-    [internalGroqTypeReferenceTo]?: 'member'
-  }>
-}
-
 export type Settings = {
   _id: string
   _type: 'settings'
@@ -249,24 +234,7 @@ export type Home = {
   _updatedAt: string
   _rev: string
   title?: string
-  slogan?: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }>
+  slogan?: string
   image?: {
     asset?: {
       _ref: string
@@ -382,7 +350,6 @@ export type AllSanitySchemaTypes =
   | SanityFileAsset
   | Page
   | Slug
-  | Team
   | Settings
   | Home
   | SanityImageCrop
@@ -397,24 +364,7 @@ export declare const internalGroqTypeReferenceTo: unique symbol
 export type HomePageQueryResult = {
   _id: string
   _type: 'home'
-  slogan: Array<{
-    children?: Array<{
-      marks?: Array<string>
-      text?: string
-      _type: 'span'
-      _key: string
-    }>
-    style?: 'normal'
-    listItem?: never
-    markDefs?: Array<{
-      href?: string
-      _type: 'link'
-      _key: string
-    }>
-    level?: number
-    _type: 'block'
-    _key: string
-  }> | null
+  slogan: string | null
   title: string | null
   poll: Array<
     | {
